@@ -3,7 +3,6 @@ package k_closest_points_to_origin;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Solution {
     public int[][] kClosest(int[][] points, int k) {
@@ -13,11 +12,7 @@ public class Solution {
                 .collect(Collectors.toList());
 
         int[][] result = new int[k][2];
-        IntStream.range(0, k)
-                .mapToObj(sortedPoints::get)
-                .collect(Collectors.toList())
-                .toArray(result);
-        return result;
+        return sortedPoints.subList(0, k).toArray(result);
     }
 
     public static void main(String[] args) {
