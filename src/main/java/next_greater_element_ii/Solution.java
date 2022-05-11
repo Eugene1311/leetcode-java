@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Solution {
     public int[] nextGreaterElements(int[] nums) {
-        Stack<Integer> descendingStack = new Stack<>();
+        Stack<Integer> descendingIndexes = new Stack<>();
         Deque<Integer> ascendingDeque = new LinkedList<>();
         int[] result = new int[nums.length];
         Arrays.fill(result, -1);
@@ -14,22 +14,22 @@ public class Solution {
         for (int i = 1; i < nums.length; i++) {
             if (nums[i] > nums[i - 1]) {
                 result[i - 1] = nums[i];
-                while (!descendingStack.isEmpty() && nums[descendingStack.peek()] < nums[i]) {
-                    int index = descendingStack.pop();
+                while (!descendingIndexes.isEmpty() && nums[descendingIndexes.peek()] < nums[i]) {
+                    int index = descendingIndexes.pop();
                     result[index] = nums[i];
                 }
             } else {
-                descendingStack.push(i - 1);
+                descendingIndexes.push(i - 1);
             }
             if (nums[i] > ascendingDeque.getLast()) {
                 ascendingDeque.add(nums[i]);
             }
         }
-        descendingStack.push(nums.length - 1);
+        descendingIndexes.push(nums.length - 1);
 
-        while (!descendingStack.isEmpty() && !ascendingDeque.isEmpty()) {
-            if (nums[descendingStack.peek()] < ascendingDeque.peek()) {
-                int index = descendingStack.pop();
+        while (!descendingIndexes.isEmpty() && !ascendingDeque.isEmpty()) {
+            if (nums[descendingIndexes.peek()] < ascendingDeque.peek()) {
+                int index = descendingIndexes.pop();
                 result[index] = ascendingDeque.peek();
             } else {
                 ascendingDeque.pop();
