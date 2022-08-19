@@ -8,23 +8,21 @@ public class Solution {
     public int lengthOfLongestSubstring(String s) {
         String[] chars = s.split("");
         List<String> temp = new ArrayList<>();
-        List<Integer> results = new ArrayList<>();
+        int result = 0;
 
         for (String ch: chars) {
             if (ch.isEmpty()) {
                 continue;
             }
             if (temp.contains(ch)) {
-                results.add(temp.size());
+                result = Math.max(result, temp.size());
                 temp = temp.subList(temp.indexOf(ch) + 1, temp.size());
             }
             temp.add(ch);
         }
-        results.add(temp.size());
+        result = Math.max(result, temp.size());
 
-        return results.stream()
-                .max(Comparator.comparingInt(a -> a))
-                .orElse(0);
+        return result;
     }
 
     public static void main(String[] args) {
