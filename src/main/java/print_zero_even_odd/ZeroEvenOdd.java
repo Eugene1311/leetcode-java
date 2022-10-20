@@ -5,7 +5,7 @@ import java.util.function.IntConsumer;
 
 public class ZeroEvenOdd {
     private final int n;
-    private volatile int counter;
+    private int counter;
     private volatile boolean isZeroTime = true;
     private final Semaphore semaphore1 = new Semaphore(1);
     private final Semaphore semaphore2 = new Semaphore(1);
