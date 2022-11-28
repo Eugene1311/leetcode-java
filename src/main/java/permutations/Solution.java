@@ -16,14 +16,11 @@ public class Solution {
         if (tempList.size() == resultSize) {
             results.add(new ArrayList<>(tempList));
         } else {
-            for (int i = 0; i < nums.length; i++) {
-                if (tempList.contains(nums[i])) {
+            for (int num : nums) {
+                if (tempList.contains(num)) {
                     continue;
                 }
-                tempList.add(nums[i]);
-//                int[] filteredNums = IntStream.of(nums)
-//                        .filter(num -> !tempList.contains(num))
-//                        .toArray();
+                tempList.add(num);
                 process(nums, tempList, results, resultSize);
                 tempList.remove(tempList.size() - 1);
             }
