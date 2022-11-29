@@ -43,25 +43,21 @@ public class Solution {
         List<List<Integer>> newResults = new ArrayList<>(results);
         for (int notUniqueNum : notUniqueNums) {
             newResults = newResults.stream()
-                    .map(result -> {
-                        List<Integer> newResult = new ArrayList<>(result);
+                    .flatMap(result -> {
+                        List<List<Integer>> newR = new ArrayList<>();
                         for (int j = 0; j < result.size(); j++) {
-                            if (j == result.size() - 1 || result.get(j) != notUniqueNum) {
+                            List<Integer> newResult = new ArrayList<>(result);
+                            if (result.get(j) != notUniqueNum) {
                                 newResult.add(j, notUniqueNum);
+                                newR.add(newResult);
                             }
                         }
-                        return newResult;
+                        result.add(notUniqueNum);
+                        newR.add(result);
+                        return newR.stream();
                     })
+                    .distinct()
                     .toList();
-//            for (int i = 0; i < results.size(); i++) {
-//                List<Integer> newResult = new ArrayList<>(results.get(i));
-//                for (int j = 0; j < results.get(i).size(); j++) {
-//                    if (j == results.get(i).size() - 1 || results.get(i).get(j) != notUniqueNum) {
-//                        newResult.add(j, notUniqueNum);
-//                        newResults.add(newResult);
-//                    }
-//                }
-//            }
         }
 
         return newResults;
@@ -69,8 +65,8 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-//        System.out.println(solution.permuteUnique(new int[]{1, 1, 2}));
-//        System.out.println(solution.permuteUnique(new int[]{1, 2, 3}));
+        System.out.println(solution.permuteUnique(new int[]{1, 1, 2}));
+        System.out.println(solution.permuteUnique(new int[]{1, 2, 3}));
         System.out.println(solution.permuteUnique(new int[]{2, 2, 1, 1}));
     }
 }
