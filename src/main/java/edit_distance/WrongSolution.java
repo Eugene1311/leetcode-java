@@ -1,10 +1,9 @@
 package edit_distance;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class Solution {
+public class WrongSolution {
     public int minDistance(String word1, String word2) {
         List<String> firstLetters = Arrays.asList(word1.split(""));
 
@@ -32,7 +31,7 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        WrongSolution solution = new WrongSolution();
         System.out.println(solution.minDistance("sea", "ate"));
         System.out.println(solution.minDistance("horse", "ros"));
         System.out.println(solution.minDistance("intention", "execution"));
