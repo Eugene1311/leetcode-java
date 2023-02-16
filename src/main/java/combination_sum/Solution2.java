@@ -13,7 +13,7 @@ public class Solution2 {
     }
 
     private void backtrack(List<List<Integer>> list, List<Integer> tempList, int[] candidates, int remain, int start) {
-        System.out.printf("remain: %d, tempList: %s, list: %s%n", remain, tempList, list);
+        System.out.printf("remain: %d, tempList: %s, list: %s, start: %d%n", remain, tempList, list, start);
         if (remain == 0) {
             list.add(new ArrayList<>(tempList));
         } else if (remain > 0) {
