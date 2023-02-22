@@ -2,7 +2,7 @@ package divide_two_integers;
 
 public class Solution {
     public int divide(int dividend, int divisor) {
-        boolean isNegative = (long) dividend * (long) divisor < 0;
+        boolean isNegative = (dividend > 0 && divisor < 0) || (dividend < 0 && divisor > 0);
         long longDividend = Math.abs((long) dividend);
         long longDivisor = Math.abs((long) divisor);
         long quotient = 0;
@@ -19,7 +19,7 @@ public class Solution {
         }
 
         if (isNegative) {
-            quotient *= -1;
+            quotient = ~quotient + 1;
         }
         long result = quotient;
         result = Math.min(Integer.MAX_VALUE, result);
