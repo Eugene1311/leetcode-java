@@ -14,7 +14,6 @@ public class Solution extends GuessGame {
         int min = 0;
         int max = n;
         while ((x = guess(result)) != 0) {
-            System.out.println("x: " + x + ", res: " + result);
             if (x == 1) {
                 min = result;
                 int diff = (max - result) / 2 != 0 ? (max - result) / 2 : 1;
