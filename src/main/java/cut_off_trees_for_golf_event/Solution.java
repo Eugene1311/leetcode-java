@@ -1,76 +1,74 @@
 package cut_off_trees_for_golf_event;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-record State(int steps, List<Integer> coordinates) {
-}
 
 class Solution {
     public int cutOffTree(List<List<Integer>> forest) {
-        List<Integer> trees = forest.stream()
-                .flatMap(Collection::stream)
-                .filter(height -> height > 1)
+        List<List<Integer>> trees = IntStream.range(0, forest.size())
+                .boxed()
+                .flatMap(i -> IntStream.range(0, forest.get(i).size())
+                        .filter(j -> forest.get(i).get(j) > 1)
+                        .mapToObj(j -> List.of(forest.get(i).get(j), i, j))
+                )
+                .sorted(Comparator.comparingInt(a -> a.get(0)))
                 .toList();
-        PriorityQueue<Integer> queue = new PriorityQueue<>(trees);
 
-        State state = new State(0, List.of(0, 0));
-        while (queue.peek() != null && state != null) {
-            state = findNextTree(queue.poll(), Set.of(state.coordinates()), new HashSet<>(), state, forest);
+        int result = 0, startY = 0, startX = 0;
+        for (List<Integer> tree : trees) {
+            int nextSteps = getSteps(tree.get(2), tree.get(1), startX, startY, forest);
+            if (nextSteps < 0) return -1;
+            result += nextSteps;
+            startY = tree.get(1);
+            startX = tree.get(2);
         }
-
-        return state != null ? state.steps() : -1;
+        return result;
     }
 
-    private State findNextTree(int tree, Set<List<Integer>> cells, Set<List<Integer>> previousCells, State state, List<List<Integer>> forest) {
-        if (cells.isEmpty()) {
-            return null;
+    private int getSteps(int treeX, int treeY, int startX, int startY, List<List<Integer>> forest) {
+        int height = forest.size();
+        int width = forest.get(0).size();
+        boolean[][] visited = new boolean[height][width];
+        Queue<int[]> cellsToVisit = new LinkedList<>();
+        cellsToVisit.add(new int[]{startY, startX, 0});
+
+        while (!cellsToVisit.isEmpty()) {
+            var currentCell = cellsToVisit.poll();
+            int x = currentCell[1];
+            int y = currentCell[0];
+            if (x == treeX && y == treeY) {
+                return currentCell[2];
+            }
+
+            Stream.of(
+                            new int[]{y - 1, x, currentCell[2] + 1},
+                            new int[]{y + 1, x, currentCell[2] + 1},
+                            new int[]{y, x - 1, currentCell[2] + 1},
+                            new int[]{y, x + 1, currentCell[2] + 1}
+                    )
+                    .filter(cell -> {
+                        int cellX = cell[1];
+                        int cellY = cell[0];
+
+                        return cellX >= 0
+                               && cellX < width
+                               && cellY >= 0
+                               && cellY < height
+                               && (forest.get(cellY).get(cellX) != 0)
+                               && !visited[cellY][cellX];
+                    })
+                    .forEach(cell -> {
+                        visited[cell[0]][cell[1]] = true;
+                        cellsToVisit.add(cell);
+                    });
         }
 
-        return cells.stream()
-                .filter(cell -> {
-                    int x = cell.get(1);
-                    int y = cell.get(0);
-
-                    return forest.get(y).get(x).equals(tree);
-                })
-                .findFirst()
-                .map(cell -> new State(state.steps(), cell))
-                .orElseGet(() -> findNextTree(tree, getNextCells(cells, previousCells, forest), previousCells, new State(state.steps() + 1, state.coordinates()), forest));
-    }
-
-    private Set<List<Integer>> getNextCells(Set<List<Integer>> cells, Set<List<Integer>> previousCells, List<List<Integer>> forest) {
-        Set<List<Integer>> nextCells = cells.stream()
-                .flatMap(cell -> {
-                    int x = cell.get(1);
-                    int y = cell.get(0);
-
-
-                    return Stream.of(
-                            List.of(y - 1, x),
-                            List.of(y + 1, x),
-                            List.of(y, x - 1),
-                            List.of(y, x + 1)
-                    );
-                })
-                .filter(cell -> !previousCells.contains(cell))
-                .filter(cell -> {
-                    int x = cell.get(1);
-                    int y = cell.get(0);
-
-                    return x >= 0
-                           && x < forest.get(0).size()
-                           && y >= 0
-                           && y < forest.size()
-                           && (forest.get(y).get(x) != 0);
-                })
-                .collect(Collectors.toSet());
-
-        previousCells.clear();
-        previousCells.addAll(cells);
-
-        return nextCells;
+        return -1;
     }
 
     public static void main(String[] args) {
