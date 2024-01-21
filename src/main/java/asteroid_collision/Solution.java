@@ -4,24 +4,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Stream;
 
 public class Solution {
     public int[] asteroidCollision(int[] asteroids) {
         List<Integer> result = new ArrayList<>();
-        Stack<Integer> toRightAsteroids = new Stack<>();
+        Stack<Integer> positiveAsteroids = new Stack<>();
 
         for (int asteroid : asteroids) {
             if (asteroid > 0) {
-                toRightAsteroids.add(asteroid);
+                positiveAsteroids.add(asteroid);
             } else {
                 boolean battleFinished = false;
-                while (!toRightAsteroids.isEmpty() && !battleFinished) {
-                    Integer toRightAsteroid = toRightAsteroids.pop();
-                    if (toRightAsteroid > Math.abs(asteroid)) {
+                while (!positiveAsteroids.isEmpty() && !battleFinished) {
+                    Integer positiveAsteroid = positiveAsteroids.peek();
+                    if (positiveAsteroid > Math.abs(asteroid)) {
                         battleFinished = true;
-                        toRightAsteroids.add(toRightAsteroid);
-                    } else if (toRightAsteroid == Math.abs(asteroid)) {
+                    } else if (positiveAsteroid == Math.abs(asteroid)) {
                         battleFinished = true;
+                        positiveAsteroids.pop();
+                    } else {
+                        positiveAsteroids.pop();
                     }
                 }
                 if (!battleFinished) {
@@ -30,9 +33,10 @@ public class Solution {
             }
         }
 
-        result.addAll(new ArrayList<>(toRightAsteroids));
-
-        return result.stream()
+        return Stream.concat(
+                        result.stream(),
+                        positiveAsteroids.stream()
+                )
                 .mapToInt(x -> x)
                 .toArray();
     }
