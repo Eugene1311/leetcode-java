@@ -1,7 +1,6 @@
 package prison_cells_after_n_days;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Solution {
     public int[] prisonAfterNDays(int[] cells, int n) {
@@ -21,10 +20,10 @@ public class Solution {
                 }
             }
 
-            String value = Arrays.stream(nextCells)
-                    .mapToObj(String::valueOf)
-                    .collect(Collectors.joining(""));
-            int num = Integer.parseInt(value, 2);
+            int num = 0;
+            for (int j = 1; j < nextCells.length; j++) {
+                num += nextCells[j] << (nextCells.length - j);
+            }
 
             if (prevNum == num) {
                 done = true;
