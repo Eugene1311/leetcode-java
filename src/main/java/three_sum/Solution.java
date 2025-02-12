@@ -16,7 +16,7 @@ public class Solution {
             int target = -nums[i];
             while (startPosition < endPosition) {
                 int sum = nums[startPosition] + nums[endPosition];
-                if (!passedTriples.contains(List.of(nums[i], nums[startPosition], nums[endPosition])) && sum == target) {
+                if (sum == target) {
                     passedTriples.add(List.of(nums[i], nums[startPosition], nums[endPosition]));
                 }
                 if (sum > target) {
