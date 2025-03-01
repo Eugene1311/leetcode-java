@@ -27,39 +27,25 @@ public class Solution {
         if (head == null) {
             return null;
         }
-        List<Integer> result = new ArrayList<>();
+        ListNode resultList = new ListNode(0);
+        ListNode currentResultNode = resultList;
         ListNode current = head;
         ListNode prev = null;
 
         while (current.next != null) {
             if (current.val != current.next.val && (prev == null || prev.val != current.val)) {
-                result.add(current.val);
+                currentResultNode.next = new ListNode(current.val);
+                currentResultNode = currentResultNode.next;
             }
-            prev = current;
 
+            prev = current;
             current = current.next;
         }
         if (prev == null || prev.val != current.val) {
-            result.add(current.val);
+            currentResultNode.next = new ListNode(current.val);
         }
 
-        System.out.println(result);
-        return listToListNode(result);
-    }
-
-    private static ListNode listToListNode(List<Integer> values) {
-        if (values.isEmpty()) {
-            return null;
-        }
-        ListNode head = new ListNode(values.get(0));
-        ListNode prev = head;
-
-        for (int i = 1; i < values.size(); i++) {
-            prev.next = new ListNode(values.get(i));
-            prev = prev.next;
-        }
-
-        return head;
+        return resultList.next;
     }
 
     public static void main(String[] args) {
@@ -75,5 +61,20 @@ public class Solution {
             return null;
         }
         return listToListNode(Arrays.stream(values).boxed().toList());
+    }
+
+    private static ListNode listToListNode(List<Integer> values) {
+        if (values.isEmpty()) {
+            return null;
+        }
+        ListNode head = new ListNode(values.get(0));
+        ListNode prev = head;
+
+        for (int i = 1; i < values.size(); i++) {
+            prev.next = new ListNode(values.get(i));
+            prev = prev.next;
+        }
+
+        return head;
     }
 }
